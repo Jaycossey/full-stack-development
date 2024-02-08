@@ -1,8 +1,9 @@
 const Part = (props) => {
-    const { part, exercise } = props;
+    console.log("Props in Part:", props);
+    const { part } = props;
 
     return (
-        <p>{part} {exercise}</p>
+        <p>{part.name} {part.exercises}</p>
     );
 }
 
