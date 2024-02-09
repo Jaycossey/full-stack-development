@@ -2,6 +2,9 @@ import { useState } from 'react'
 import Button from './Button'
 
 const App = () => {
+  const [points, setPoints] = useState(0);
+
+  // array of anecdotes
   const anecdotes = [
     'If it hurts, do it more often.',
     'Adding manpower to a late software project makes it later!',
@@ -12,11 +15,28 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
     'The only way to go fast, is to go well.'
   ]
+  // array to store objects
+  const aneArray = []
+  // populate array of objects.
+  for (let i = 0; i < anecdotes.length; i++) {
+    aneArray.push({
+      anec: anecdotes[i],
+      points: 0
+    });
+  }
+  console.log(aneArray);
 
-
+  // generate random anecdote
   const handleClick = () => {
     let random = Math.floor(Math.random() * (anecdotes.length - 0) + 0);
     setSelected(random);
+  }
+
+  // handle vote click on buttons
+  const handleVote = () => {
+    console.log("Vote");
+    aneArray[selected].points = setPoints(aneArray[selected].points + 1);
+    console.log(aneArray[selected].points)
   }
 
   const [selected, setSelected] = useState(0)
@@ -26,6 +46,7 @@ const App = () => {
       {anecdotes[selected]}
       <br/>
       <Button style={"background: blue;"} onClick={handleClick} text={"Click for  random"} />
+      <Button onClick={handleVote} text={"Vote for this"} />
     </div>
   )
 }
