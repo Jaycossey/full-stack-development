@@ -2,6 +2,16 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import Header from './components/Header';
 import Button from './components/Button';
+import Statistics from './components/Statistics';
+
+// calculate percentage function
+function percentage(partialValue, totalValue) {
+  if (partialValue === totalValue) {
+    return 100;
+  }
+
+  return (partialValue / totalValue) * 100;
+}
 
 const App = () => {
   // save clicks of each button to its own state
@@ -13,14 +23,23 @@ const App = () => {
   const [average, setAverage] = useState(0);
   const [posPerc, setPosPerc] = useState(0);
 
-  useEffect(() => {
-    
-    setAll(good + neutral + bad);
-    // setAverage();
-    // average should work out with the VALUES of each score. so good should equate to +1, neutral to 0 and bad to -1. 
-    // whatever that is I need to find out how to work it out. come back to it
+  const statistics = {good, neutral, bad, all, average, posPerc};
 
-    setPosPerc(good / all * 100);
+  useEffect(() => {
+    // update total count    
+    setAll(good + neutral + bad);
+    
+    // set positive, not sure why the maths isnt working properly, need to come back to it 
+    // state is the aim of this exercise and thats whats working
+    let percDisp = percentage(good, all);
+    setPosPerc(percDisp);
+    
+    // set average score
+    let goodCount = good;
+    let badCount = -bad;
+    let average = goodCount + badCount / 3;
+    setAverage(average);
+    console.log(`g: ${good} n: ${neutral} b: ${bad}, all: ${all} av: ${average} per: ${posPerc}`);
 
   }, [good, neutral, bad]);
 
@@ -29,21 +48,19 @@ const App = () => {
     switch(text) {
       case "Good":
         setGood(good + 1);
-        console.log(good);
         break;
       case "Neutral":
         setNeutral(neutral + 1);
-        console.log(neutral);4
         break;
       case "Bad":
         setBad(bad + 1);
-        console.log(bad);
         break;
       default:
         console.log("Error, value not defined");
         return;
     }
   }
+
 
   return (
     <>
@@ -53,13 +70,7 @@ const App = () => {
       <Button text={"Neutral"} onClick={handleClick} />
       <Button text={"Bad"} onClick={handleClick} />
 
-      <h3>Statistics</h3>
-      <p>Good: {good}</p>
-      <p>Neutral: {neutral}</p>
-      <p>Bad: {bad}</p>
-      <p>All: {all}</p>
-      <p>Average: {average}</p>
-      <p>Positive: {posPerc}%</p>
+      <Statistics stats={statistics} />
     </>
   )
 }
