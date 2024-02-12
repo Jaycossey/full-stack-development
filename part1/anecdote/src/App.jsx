@@ -1,8 +1,22 @@
 import { useState } from 'react'
 import Button from './Button'
+import './App.css'
+
+/**
+ * 
+ * IMPORTANT!!! When revisiting this tonight, this current build works in terms of method, I just need to handle how 
+ * to set the state correctly per array index, I have the state updating, potential fix:
+ * 
+ * points is initially set to 0, setPoints should take the indexed value and add 1 to it, 
+ * this is coming up currently as undefined, re-check the indexing and targeting of the array.
+ * Looks like the targeting is working correctly, but the value ends as undefined. so this needs to be tweaked in terms of VALUE
+ * not in terms of targetting. 
+ * 
+ */
 
 const App = () => {
   const [points, setPoints] = useState(0);
+  const [selected, setSelected] = useState(0);
 
   // array of anecdotes
   const anecdotes = [
@@ -14,18 +28,15 @@ const App = () => {
     'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
     'The only way to go fast, is to go well.'
-  ]
+  ];
   // array to store objects
   const aneArray = []
   // populate array of objects.
   for (let i = 0; i < anecdotes.length; i++) {
-    aneArray.push({
-      anec: anecdotes[i],
-      points: 0
-    });
+    aneArray.push(0);
   }
-  console.log(aneArray);
 
+  const arrCopy = [ ...aneArray ];
   // generate random anecdote
   const handleClick = () => {
     let random = Math.floor(Math.random() * (anecdotes.length - 0) + 0);
@@ -34,18 +45,20 @@ const App = () => {
 
   // handle vote click on buttons
   const handleVote = () => {
-    console.log("Vote");
-    aneArray[selected].points = setPoints(aneArray[selected].points + 1);
-    console.log(aneArray[selected].points)
+    // THIS IS WHERE THE BUG IS!!! I NEED TO WORK OUT HOW TO SET POINTS FROM HERE INSTEAD OF IT RETURNING UNDEFINED
+    console.log(anecdotes[selected]);
+    arrCopy[selected] = setPoints(arrCopy[selected] + 1);
+    console.log(arrCopy[selected]);
+    console.log(arrCopy);
   }
 
-  const [selected, setSelected] = useState(0)
 
   return (
     <div>
       {anecdotes[selected]}
       <br/>
-      <Button style={"background: blue;"} onClick={handleClick} text={"Click for  random"} />
+      <Button onClick={handleClick} text={"Click for  random"} />
+      <br />
       <Button onClick={handleVote} text={"Vote for this"} />
     </div>
   )
