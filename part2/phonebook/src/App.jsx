@@ -8,11 +8,10 @@ const App = () => {
 
   const handleSubmit = () => {
     event.preventDefault();
-    const nameObj = {name: newName};
-    setPersons((prev) => {
-      [...prev, nameObj]
-    });
-    console.log(persons);
+    // issue was me trying to use a callback, just reassigning state was what was needed
+    setPersons(
+      [...persons, {name: newName}]
+    );
   }
 
   const handleChange = (name) => {
@@ -34,9 +33,11 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       <div>Debug: {newName}</div>
+
       {persons.map((pers, i) => {
-        return (<p key={i}>{pers.name}</p>);
+        return (<p key={i}>{pers.name}</p>)
       })}
+
     </div>
   )
 }
