@@ -1,9 +1,14 @@
-import { useState } from 'react'
+import { useState } from 'react';
+import Search from './components/Search';
+import Form from './components/Form';
+import List from './components/List';
 
 const App = () => {
   // state management for person array and onchange input
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
+  const [searchParam, setSearchParam] = useState('');
+  const [filterResults, setFilterResults] = useState([]);
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas' }
   ]);
@@ -14,29 +19,27 @@ const App = () => {
     // prevent refresh of page
     event.preventDefault();
 
-    // // issue was me trying to use a callback, just reassigning state was what was needed
-    // setPersons(
-    //   [...persons, {name: newName}]
-    // );
+    // bool to check if name exists
     let checkExist = false;
+    // for each person in book, check exists
     persons.forEach((person) => {
       if (person.name == newName) {
         checkExist = true;
+        // alert if user already exists
         alert(`${newName} already added to phonebook`);
-        console.log(checkExist);
       }
     });
 
+    // if exists then return from function
     if(checkExist) {
       return;
     } else {
+      // else set new name & number
       setPersons(
         [...persons, {name: newName, number: newNumber}]
       )
     }
-    console.log(persons);
     return;
-
   }
   
   
@@ -45,30 +48,33 @@ const App = () => {
     setNewName(name);
   }
 
+  // update phone number on input change
   const handleNumberChange = (number) => {
     setNewNumber(number);
   }
 
+  // search and filter for names
+  const handleSearch = (name) => {
+    setSearchParam(name);
+    
+    setFilterResults(persons.filter((person) => person.name.toLowerCase().includes(name.toLowerCase())));
+
+    return;
+  }
+
+
   return (
     <div>
       <h2>Phonebook</h2>
-      {/* important to note (for myself) prevent default runs on the FORM onSubmit, not the button of type submit */}
-      <form onSubmit={handleSubmit}>
-        <div>
-          Name: <input value={newName} onChange={(e) => handleChange(e.target.value)} />
-          Number: <input value={newNumber} onChange={(e) => handleNumberChange(e.target.value)} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+
+      <Search searchParam={searchParam} handleSearch={handleSearch} filterResults={filterResults} />
+
+      <Form handleSubmit={handleSubmit} newName={newName} handleChange={handleChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
+
       <h2>Numbers</h2>
-      <div>Debug: {newName}</div>
 
-      {persons.map((pers, i) => {
-        return (<p key={i}>{pers.name}'s Number: {pers.number}</p>)
-      })}
-
+      <List persons={persons} />
+      
     </div>
   )
 }
