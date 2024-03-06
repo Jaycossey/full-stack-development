@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Search from './components/Search';
 import Form from './components/Form';
 import List from './components/List';
+import axios from 'axios';
 
 const App = () => {
   // state management for person array and onchange input
@@ -9,9 +10,17 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('');
   const [searchParam, setSearchParam] = useState('');
   const [filterResults, setFilterResults] = useState([]);
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas' }
-  ]);
+  const [persons, setPersons] = useState([]);
+
+  // fetch initial data and set state
+  const fetchData = () => {
+    axios.get('http://localhost:3001/persons')
+      .then((res) => {
+        setPersons(res.data);
+      });
+  }
+  // fetch on initial component render
+  useEffect(fetchData, []);
 
 
   // handle name submission
