@@ -26,6 +26,7 @@ const App = () => {
       })
   }, []);
 
+  // trigger re-render to update front end phonebook list
   useEffect(() => {
     personService.fetchData()
       .then(res => {
