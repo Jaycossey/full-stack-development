@@ -14,6 +14,13 @@ const addPerson = (personObj) => {
     return axios.post(baseUrl, personObj);
 }
 
+const updatePerson = (personId, newObject) => {
+    const request = axios.put(`${baseUrl}/${personId}`, newObject)
+        .then(res => res.data);
+    return request.then(newData => newData.data);
+
+}
+
 const deletePerson = (id) => {
     // return axios.delete(baseUrl, person);
     const request = axios.delete(`${baseUrl}/${id}`);
@@ -23,5 +30,6 @@ const deletePerson = (id) => {
 export default {
     fetchData: fetchData,
     addPerson: addPerson,
+    updatePerson: updatePerson,
     deletePerson: deletePerson
 }

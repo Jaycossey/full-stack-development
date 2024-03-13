@@ -21,7 +21,6 @@ const App = () => {
       })
   }, []);
 
-
   // handle name submission
   const handleSubmit = () => {
     // prevent refresh of page
@@ -33,8 +32,8 @@ const App = () => {
     persons.forEach((person) => {
       if (person.name == newName) {
         checkExist = true;
-        // alert if user already exists
-        alert(`${newName} already added to phonebook`);
+        window.confirm(`Are you sure you want to update ${newName}?`)
+        personService.updatePerson(person.id, {name: newName, number: newNumber});
       }
     });
 
