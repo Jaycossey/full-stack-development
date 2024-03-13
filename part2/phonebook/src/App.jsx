@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import Search from './components/Search';
 import Form from './components/Form';
 import List from './components/List';
+import Alert from './components/Alert';
+import Error from './components/Error';
+import './App.css';
 // import axios from 'axios';
 import personService from '../services/persons';
 
@@ -12,6 +15,8 @@ const App = () => {
   const [searchParam, setSearchParam] = useState('');
   const [filterResults, setFilterResults] = useState([]);
   const [persons, setPersons] = useState([]);
+  const [alertMessage, setAlertMessage] = useState();
+  const [errorMessage, setErrorMessage] = useState();
 
   // fetch on initial component render
   useEffect(() => {
@@ -20,6 +25,13 @@ const App = () => {
         setPersons(res);
       })
   }, []);
+
+  useEffect(() => {
+    personService.fetchData()
+      .then(res => {
+        setPersons(res);
+      })
+  }, [errorMessage, alertMessage]);
 
   // handle name submission
   const handleSubmit = () => {
@@ -34,6 +46,10 @@ const App = () => {
         checkExist = true;
         window.confirm(`Are you sure you want to update ${newName}?`)
         personService.updatePerson(person.id, {name: newName, number: newNumber});
+        setAlertMessage(`Updated ${newName}'s details`);
+        setTimeout(() => {
+          setAlertMessage();
+        }, 4000)
       }
     });
 
@@ -47,6 +63,10 @@ const App = () => {
         [...persons, personObj]
       )
       personService.addPerson(personObj);
+      setAlertMessage(`Added ${newName} to phonebook`);
+      setTimeout(() => {
+        setAlertMessage();
+      }, 4000);
     }
     return;
   }
@@ -74,14 +94,19 @@ const App = () => {
   // delete person from phonebook
   const deletePerson = (id) => {
     window.confirm(`Are you sure you want to delete?`);
+    setErrorMessage(`Deleted from server`);
     personService.deletePerson(id);
+    setTimeout(() => {
+      setErrorMessage();
+    }, 4000)
   }
 
 
   return (
     <div>
       <h2>Phonebook</h2>
-
+      <Alert message={alertMessage} />
+      <Error message={errorMessage} />
       <Search searchParam={searchParam} handleSearch={handleSearch} filterResults={filterResults} />
 
       <Form handleSubmit={handleSubmit} newName={newName} handleChange={handleChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
