@@ -1,9 +1,14 @@
 const List = (props) => {
-    const {persons} = props;
+    const {persons, onClick} = props;
     return (
         <>
             {persons.map((pers, i) => {
-                return (<p key={i}>{pers.name}'s Number: {pers.number}</p>)
+                return (
+                    <div  key={pers.id}>
+                        <p>{pers.name}'s Number: {pers.number}</p>
+                        <button onClick={() => onClick(pers.id)} type="button">Delete</button>
+                    </div>
+                    )
             })}
         </>
     );

@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import Search from './components/Search';
 import Form from './components/Form';
 import List from './components/List';
-import axios from 'axios';
+// import axios from 'axios';
+import personService from '../services/persons';
 
 const App = () => {
   // state management for person array and onchange input
@@ -12,15 +13,13 @@ const App = () => {
   const [filterResults, setFilterResults] = useState([]);
   const [persons, setPersons] = useState([]);
 
-  // fetch initial data and set state
-  const fetchData = () => {
-    axios.get('http://localhost:3001/persons')
-      .then((res) => {
-        setPersons(res.data);
-      });
-  }
   // fetch on initial component render
-  useEffect(fetchData, []);
+  useEffect(() => {
+    personService.fetchData()
+      .then(res => {
+        setPersons(res);
+      })
+  }, []);
 
 
   // handle name submission
@@ -43,10 +42,12 @@ const App = () => {
     if(checkExist) {
       return;
     } else {
+      let personObj = {name: newName, number: newNumber};
       // else set new name & number
       setPersons(
-        [...persons, {name: newName, number: newNumber}]
+        [...persons, personObj]
       )
+      personService.addPerson(personObj);
     }
     return;
   }
@@ -71,6 +72,12 @@ const App = () => {
     return;
   }
 
+  // delete person from phonebook
+  const deletePerson = (id) => {
+    window.confirm(`Are you sure you want to delete?`);
+    personService.deletePerson(id);
+  }
+
 
   return (
     <div>
@@ -82,7 +89,7 @@ const App = () => {
 
       <h2>Numbers</h2>
 
-      <List persons={persons} />
+      <List onClick={deletePerson} persons={persons} />
       
     </div>
   )
