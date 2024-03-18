@@ -14,6 +14,7 @@ const addPerson = (personObj) => {
     return axios.post(baseUrl, personObj);
 }
 
+// update details of person
 const updatePerson = (personId, newObject) => {
     const request = axios.put(`${baseUrl}/${personId}`, newObject)
         .then(res => res.data);
@@ -21,6 +22,7 @@ const updatePerson = (personId, newObject) => {
 
 }
 
+// delet person from server
 const deletePerson = (id) => {
     // return axios.delete(baseUrl, person);
     const request = axios.delete(`${baseUrl}/${id}`);
